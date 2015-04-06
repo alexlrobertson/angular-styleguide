@@ -504,7 +504,7 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
       vm.avengers = [];
       vm.title = 'Avengers';
 
-      var activate = function() {
+      var init = function() {
           return getAvengers().then(function() {
               logger.info('Activated Avengers View');
           });
@@ -519,7 +519,7 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
 
       vm.getAvengers = getAvengers;
 
-      activate();
+      init();
   }
   ```
 
@@ -537,9 +537,9 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
       vm.getAvengers = getAvengers;
       vm.title = 'Avengers';
 
-      activate();
+      init();
 
-      function activate() {
+      function init() {
           return getAvengers().then(function() {
               logger.info('Activated Avengers View');
           });
@@ -948,9 +948,9 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
       var vm = this;
       vm.avengers = [];
 
-      activate();
+      init();
 
-      function activate() {
+      function init() {
           return getAvengers().then(function() {
               logger.info('Activated Avengers View');
           });
@@ -976,9 +976,9 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
   ```javascript
   /* recommended */
 
-  activate();
+  init();
 
-  function activate() {
+  function init() {
       /**
        * Step 1
        * Ask the getAvengers function for the
@@ -1318,11 +1318,11 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
 ### Controller Activation Promises
 ###### [Style [Y080](#style-y080)]
 
-  - Resolve start-up logic for a controller in an `activate` function.
+  - Resolve start-up logic for a controller in an `init` function.
 
     *Why?*: Placing start-up logic in a consistent place in the controller makes it easier to locate, more consistent to test, and helps avoid spreading out the activation logic across the controller.
 
-    *Why?*: The controller `activate` makes it convenient to re-use the logic for a refresh for the controller/View, keeps the logic together, gets the user to the View faster, makes animations easy on the `ng-view` or `ui-view`, and feels snappier to the user.
+    *Why?*: The controller `init` makes it convenient to re-use the logic for a refresh for the controller/View, keeps the logic together, gets the user to the View faster, makes animations easy on the `ng-view` or `ui-view`, and feels snappier to the user.
 
     Note: If you need to conditionally cancel the route before you start use the controller, use a [route resolve](#style-y081) instead.
 
@@ -1347,11 +1347,11 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
       vm.avengers = [];
       vm.title = 'Avengers';
 
-      activate();
+      init();
 
       ////////////
 
-      function activate() {
+      function init() {
           return dataservice.getAvengers().then(function(data) {
               vm.avengers = data;
               return vm.avengers;
@@ -1369,9 +1369,9 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
 
     *Why?*: A controller may require data before it loads. That data may come from a promise via a custom factory or [$http](https://docs.angularjs.org/api/ng/service/$http). Using a [route resolve](https://docs.angularjs.org/api/ngRoute/provider/$routeProvider) allows the promise to resolve before the controller logic executes, so it might take action based on that data from the promise.
 
-    *Why?*: The code executes after the route and in the controller’s activate function. The View starts to load right away. Data binding kicks in when the activate promise resolves. A “busy” animation can be shown during the view transition (via `ng-view` or `ui-view`)
+    *Why?*: The code executes after the route and in the controller’s init function. The View starts to load right away. Data binding kicks in when the init promise resolves. A “busy” animation can be shown during the view transition (via `ng-view` or `ui-view`)
 
-    Note: The code executes before the route via a promise. Rejecting the promise cancels the route. Resolve makes the new view wait for the route to resolve. A “busy” animation can be shown before the resolve and through the view transition. If you want to get to the View faster and do not require a checkpoint to decide if you can get to the View, consider the [controller `activate` technique](#style-y080) instead.
+    Note: The code executes before the route via a promise. Rejecting the promise cancels the route. Resolve makes the new view wait for the route to resolve. A “busy” animation can be shown before the resolve and through the view transition. If you want to get to the View faster and do not require a checkpoint to decide if you can get to the View, consider the [controller `init` technique](#style-y080) instead.
 
   ```javascript
   /* avoid */
@@ -2992,7 +2992,7 @@ Use [Gulp](http://gulpjs.com) or [Grunt](http://gruntjs.com) for creating automa
 
   - Only use `$watch` with caution (as noted above), but, when necessary, place it above function definitions and below the bindable members at the top of the controller.
   
-    *Why?*: Similar to `activate()` functions, `$watch` is an immediate action the controller is taking. Placing it at the top of the controller makes it instantly identifiable.
+    *Why?*: Similar to `init()` functions, `$watch` is an immediate action the controller is taking. Placing it at the top of the controller makes it instantly identifiable.
 
 **[Back to top](#table-of-contents)**
 
