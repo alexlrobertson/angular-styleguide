@@ -683,7 +683,7 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
 ### Singletons
 ###### [Style [Y040](#style-y040)]
 
-  - Services are instantiated with the `new` keyword, use `this` for public methods and variables. Since these are so similar to factories, use a factory instead for consistency.
+  - Services are instantiated with the `new` keyword, use `this` for public methods and variables. ~~Since these are so similar to factories, use a factory instead for consistency.~~ [Uptake Edit](#uptake)
 
     Note: [All Angular services are singletons](https://docs.angularjs.org/guide/services). This means that there is only one instance of a given service per injector.
 
@@ -2993,6 +2993,11 @@ Use [Gulp](http://gulpjs.com) or [Grunt](http://gruntjs.com) for creating automa
   - Only use `$watch` with caution (as noted above), but, when necessary, place it above function definitions and below the bindable members at the top of the controller.
   
     *Why?*: Similar to `init()` functions, `$watch` is an immediate action the controller is taking. Placing it at the top of the controller makes it instantly identifiable.
+
+  - Use factories/services where they make sense. Ignore the fact that the original style-guide says to always use factories. [Discussion](https://github.com/UptakeTech/rail-webclient/issues/10)
+  >> I just hate when Angular takes names like Controllers, Factories and replace it with their interpretation, a factory we see in Angular is nowhere near what a real FACTORY should do, same goes for the controller :).
+  >> I'd go with using Classes as services (angular.service approach).
+  >> And use factories in moderation but for what they're actually ment, like creating other objects.
 
 **[Back to top](#table-of-contents)**
 
