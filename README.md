@@ -342,6 +342,7 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
   ```
 
 ### controllerAs with vm
+#### Also see [Uptake Naming Conventions](#uptake-naming-conventions)
 ###### [Style [Y032](#style-y032)]
 
   - Use a capture variable for `this` when using the `controllerAs` syntax. Choose a consistent variable name such as `vm`, which stands for ViewModel.
@@ -1834,7 +1835,7 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
 **[Back to top](#table-of-contents)**
 
 ## Naming
-
+#### Also see [Uptake Naming Conventions](#uptake-naming-conventions)
 ### Naming Guidelines
 ###### [Style [Y120](#style-y120)]
 
@@ -2997,8 +2998,100 @@ Use [Gulp](http://gulpjs.com) or [Grunt](http://gruntjs.com) for creating automa
   - Use factories/services where they make sense. Ignore the fact that the original style-guide says to always use factories. [Discussion](https://github.com/UptakeTech/rail-webclient/issues/10)
   >> I just hate when Angular takes names like Controllers, Factories and replace it with their interpretation, a factory we see in Angular is nowhere near what a real FACTORY should do, same goes for the controller :).
   >> I'd go with using Classes as services (angular.service approach).
-  >> And use factories in moderation but for what they're actually ment, like creating other objects.
+  >> And use factories in moderation but for what they're actually meant, like creating other objects.
 
+### Uptake Naming Conventions
+
+   - **Module**: Use camelCase while creating modules with longer names. For example, use `app.userManagement` for a module instead of `app.user-management`.
+    
+    *Why?*: Using camelCase for the module names make it consistent with Angular's module naming convention.
+   
+   - **Directory and file names**: Use spinal-case while naming directories and files with longer names. For example, use `user-management` for a directory containing angular `userManagement` module instead of naming directory itself as `userManagement`.
+      
+   - **controllerAs**: Prefix the controllerAs alias `vm` with a controller specific name. For example, use `appVm` for the controller `AppController`. Another example, use `sessionsVm` for the controller `SessionsController`. Also, use the same alias in the controller definition as well to maintain consistency.
+     
+     *Why?*: Aliasing each controller as `vm` refutes the objective of avoiding `$scope` in the first place. One of the reason of avoiding `$scope` was to stop using `$parent` property in the template to access parent controller's scope from a child controller.
+
+     *Why?*: Aliasing each controller as `vm` may create confusion in case of nested controllers (e.g. think of nested states in `ui.router`).
+     
+   ```javascript
+     /* avoid */
+     
+     //app.avengers.module.js
+     $stateProvider
+          .state('app.avengers', {
+              url: '^/avengers',
+              template: '<div ui-view></div>',
+              controller: 'Avengers',
+              controllerAs: 'vm'
+          })
+              
+              
+    //app.avengers.controller.js              
+    angular
+           .module('app.avengers')
+           .controller('Avengers', Avengers);
+           
+    function Avengers() {
+        var vm = this;
+        vm.names = ['Iron Man', 'Captain America', 'Hulk'];                   
+    }
+   ```
+   
+   Using a controller specific prefix before `vm`.
+     
+   ```javascript
+    /* recommended */
+    
+    //app.avengers.module.js
+    $stateProvider
+          .state('app.avengers', {
+              url: '^/avengers',
+              template: '<div ui-view></div>',
+              controller: 'AvengersController',
+              controllerAs: 'avengersVm'
+          })
+              
+              
+    //app.avengers.controller.js              
+    angular
+           .module('app.avengers')
+           .controller('AvengersController', AvengersController);
+           
+    function AvengersController() {
+        var avengersVm = this;
+        avengersVm.names = ['Iron Man', 'Captain America', 'Hulk'];                   
+    }
+   ```
+
+   - **ui.router config**: Use camelCase while naming `state` in `$stateProvider` configuration. Also, use spinal-case while specifying `url` in the `state` object. Also, avoid using abbreviations in `url` values.
+        
+    *Why?*: Nested `state` names are more like object properties. Hence using camelCase with `.` notation is natural to JavaScript developers.
+            
+    *Why?*: Make it easy for user to type and remember the url. Also Using camelCase or abbreviations in the url values may not create a consistent user experience. (See [Google WebMasters Documentation](//support.google.com/webmasters/answer/76329))
+
+   ```javascript
+     /* avoid */
+     $stateProvider
+         .state('app.user-management.users', {
+             url: '^/userMgmt/users',
+             template: '<div ui-view></div>',
+             controller: 'UserManagementController',
+             controllerAs: 'userManagementVm'
+         })
+   ```
+     
+   ```javascript
+     /* recommended */
+     $stateProvider
+         .state('app.userManagement.users', {
+             url: '^/user-management/users',
+             template: '<div ui-view></div>',
+             controller: 'UserManagementController',
+             controllerAs: 'userManagementVm'
+         })
+    ```
+    
 **[Back to top](#table-of-contents)**
 
 ## Angular docs
