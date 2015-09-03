@@ -2,15 +2,13 @@
 
 *[@john_papa](//twitter.com/john_papa)によるチームのための頑固なAngularスタイルガイド*
 
-*Translation by [@noritamago](https://github.com/noritamago)*
-
->The [original English version](http://jpapa.me/ngstyles) is the source of truth, as it is maintained and updated first.
-
 もしあなたがAngularのシンタックス、規約、そしてアプリケーション構成のための頑固なスタイルガイドを探しているなら、どうぞいらっしゃい！本スタイルは、[Angular](//angularjs.org)を用いた私の開発経験やプレゼンテーション、[Pluralsight training courses](http://pluralsight.com/training/Authors/Details/john-papa) 、そしてチームでの作業に基づいたものです。
 
 このスタイルガイドの目的は、私が実践している規約だけでなく、私がそれを行う理由を示すことによって、Angularアプリケーションを構築する手引きとなることです。
 
 >もしあなたがこのガイドを気に入ったのなら、Pluralsightにある [Angular Patterns: Clean Code](http://jpapa.me/ngclean) の私のコースもチェックして下さい。
+
+[![Angular Patterns: Clean Code](https://raw.githubusercontent.com/johnpapa/angular-styleguide/master/assets/ng-clean-code-banner.png)](http://jpapa.me/ngclean)
 
 ## Community Awesomeness and Credit
 あなたは決して1人でありません！Angularのコミュニティは、自身の経験を共有することに情熱的な素晴らしい集団です。実際、友人でありAngularのエキスパートでもある Todd Motto と私は、共同で多くのスタイルや規約をまとめました。一部意見が分かれましたが、概ね合意できるものでした。彼のアプローチと本スタイルとの比較のため、是非 [Todd's guidelines](https://github.com/toddmotto/angularjs-styleguide) をチェックすることをお勧めします。
@@ -366,7 +364,7 @@
   }
   ```
 
-  Note: 下記のコメントをコードの上部に入れることで [jshint](http://www.jshint.com/) のwarningsを避けることができます。 しかし関数がアッパーケースの場合には不要です。規約的にはそれはコンストラクタであり、Angularではコントローラに当たります。
+  Note: コメントをコードの上部に入れることで [jshint](http://www.jshint.com/) のwarningsを避けることができます。 しかし関数がアッパーケースの場合には不要です。規約的にはそれはコンストラクタであり、Angularではコントローラに当たります。
 
   ```javascript
   /* jshint validthis: true */
@@ -898,7 +896,7 @@
 
     *なぜ ?*: データサービスを用いるコントローラをテストする際に、(モックまたは本物の)データの呼び出しを容易にテストできます。
 
-    *なぜ ?*: データサービスの実装は、データリポジトリを取り扱う非常にスペシフィックなコードとなります。 このコードには、ヘッダ、データリポジトリの利用方法、もしくは$httpのような他のサービスを含むでしょう。そのようなロジックをデータサービスへ分割し、他のconsumers (おそらくコントローラ) から実装の詳細を隠すように一つの場所へカプセル化します。そうすることで、実装の変更も容易になります
+    *なぜ ?*: データサービスの実装は、データリポジトリを取り扱う非常にスペシフィックなコードとなります。 このコードには、ヘッダ、データリポジトリの利用方法、もしくは`$http`のような他のサービスを含むでしょう。そのようなロジックをデータサービスへ分割し、他のconsumers (おそらくコントローラ) から実装の詳細を隠すように一つの場所へカプセル化します。そうすることで、実装の変更も容易になります
 
   ```javascript
   /* recommended */
@@ -1010,7 +1008,7 @@
   }
   ```
 
-    **[Back to top](#table-of-contents)**
+**[Back to top](#table-of-contents)**
 
 ## Directives
 ### Limit 1 Per File
@@ -1022,8 +1020,7 @@
 
     *なぜ ?*: ファイル毎に一つのディレクティブにすることで、メンテナンスが容易になります。
 
-    Note: "**Best Practice**: Directives should clean up after themselves. You can use `element.on('$destroy', ...)` or `scope.$on('$destroy', ...)` to run a clean-up function when the directive is removed" ... from the Angular documentation
-    Note: "**Best Practice**: ディレクティブは自身でクリーンナップされるべきです。ディレクティブが削除されたときにクリーンナップの関数を実行するために、`element.on('$destroy', ...)` や `scope.$on('$destroy', ...)`" ... Angularのドキュメンテーションより
+    Note: "**Best Practice**: ディレクティブは自身でクリーンナップされるべきです。ディレクティブが削除されたときにクリーンナップの関数を実行するために、`element.on('$destroy', ...)` や `scope.$on('$destroy', ...)`"を用いて下さい ... Angularのドキュメンテーションより。
 
 
   ```javascript
@@ -1253,6 +1250,18 @@
   <div>min={{vm.min}}<input ng-model="vm.min"/></div>
   ```
 
+    Note: コントローラをlink関数に注入して、ディレクティブの属性をコントローラのプロパティとしてアクセスすることも可能です。
+
+  ```javascript
+  // Alternative to above example
+  function linkFunc(scope, el, attr, vm) {
+      console.log('LINK: scope.min = %s *** should be undefined', scope.min);
+      console.log('LINK: scope.max = %s *** should be undefined', scope.max);
+      console.log('LINK: vm.min = %s', vm.min);
+      console.log('LINK: vm.max = %s', vm.max);
+  }
+  ```
+
 ###### [Style [Y076](#style-y076)]
 
   - `controller as`シンタックスをディレクティブで用い、外側のscopeをディレクティブのコントローラのscopeにバインドしたいときは `bindToController = true` を使って下さい。
@@ -1303,7 +1312,6 @@
 **[Back to top](#table-of-contents)**
 
 ## Resolving Promises for a Controller
-
 ### Controller Activation Promises
 ###### [Style [Y080](#style-y080)]
 
@@ -1408,8 +1416,8 @@
 
   Avengers.$inject = ['moviesPrepService'];
   function Avengers(moviesPrepService) {
-        var vm = this;
-        vm.movies = moviesPrepService.movies;
+      var vm = this;
+      vm.movies = moviesPrepService.movies;
   }
   ```
 
@@ -1436,7 +1444,7 @@
           });
   }
 
-  function moviePrepService(movieService) {
+  function moviesPrepService(movieService) {
       return movieService.getMovies();
   }
 
@@ -1473,9 +1481,9 @@
     function Dashboard(common, dataservice) {
     }
     ```
-  
+
     このコードはMinifyされたときにマングルされた変数が生成され実行エラーになるかもしれません。
-    
+
     ```javascript
     /* avoid - not minification-safe*/
     angular.module('app').controller('Dashboard', d);function d(a, b) { }
@@ -1576,13 +1584,13 @@
                 controller: 'AvengersController',
                 controllerAs: 'vm',
                 resolve: {
-                    moviesPrepService: moviePrepService
+                    moviesPrepService: moviesPrepService
                 }
             });
     }
 
-    moviePrepService.$inject = ['movieService'];
-    function moviePrepService(movieService) {
+    moviesPrepService.$inject = ['movieService'];
+    function moviesPrepService(movieService) {
         return movieService.getMovies();
     }
     ```
@@ -1967,9 +1975,11 @@
 ### Factory Names
 ###### [Style [Y125](#style-y125)]
 
-  - 全てのファクトリに対して、機能に沿った一貫性の取れた名前を用いて下さい。サービスやファクトリ名にはキャメルケースを用いて下さい。
+  - 全てのファクトリに対して、機能に沿った一貫性の取れた名前を用いて下さい。サービスやファクトリ名にはキャメルケースを用いて下さい。`$`から始まるファクトリやサービス名を避けて下さい。
 
     *なぜ ?*: 参照するべきファクトリを素早く特定する一貫性の取れた方法を与えます。
+
+    *なぜ ?*: ビルトインされている`$`から始まるファクトリやサービス名との衝突を避けられます。
 
     ```javascript
     /**
@@ -1987,7 +1997,7 @@
 ### Directive Component Names
 ###### [Style [Y126](#style-y126)]
 
-  - 全てのディレクトリにキャメルケースで一貫性を取れた名前を用いて下さい。そのディレクティブが属する範囲を表す短いプリフィックス(例としては会社やプロジェクトのプリフィックス)を用いて下さい。 
+  - 全てのディレクトリにキャメルケースで一貫性を取れた名前を用いて下さい。そのディレクティブが属する範囲を表す短いプリフィックス(例としては会社やプロジェクトのプリフィックス)を用いて下さい。
 
     *なぜ ?*: 参照するべきコンポーネントと素早く特定する一貫性の取れた方法を与えます。
 
@@ -2177,6 +2187,7 @@
         app.module.js
         app.config.js
         app.routes.js
+        directives.js
         controllers/
             attendees.js
             session-detail.js
@@ -2317,12 +2328,12 @@
       .module('app')
       .run(runBlock);
 
-    runBlock.$inject = ['authenticator', 'translator'];
+  runBlock.$inject = ['authenticator', 'translator'];
 
-    function runBlock(authenticator, translator) {
-        authenticator.initialize();
-        translator.initialize();
-    }
+  function runBlock(authenticator, translator) {
+      authenticator.initialize();
+      translator.initialize();
+  }
   ```
 
 **[Back to top](#table-of-contents)**
@@ -2391,7 +2402,7 @@
 
     *なぜ ?*: Karmaは一度だけ実行するか、コードが変更されたときに自動的に実行するかを簡単に設定することができます。
 
-    *なぜ ?*: Karmaは自前のテストランナーもしくはGruntやGulpを用いた継続的なインテグレーションのプロセスに容易に接続することができます。 
+    *なぜ ?*: Karmaは自前のテストランナーもしくはGruntやGulpを用いた継続的なインテグレーションのプロセスに容易に接続することができます。
 
     *なぜ ?*: [WebStorm](http://www.jetbrains.com/webstorm/) や [Visual Studio](http://visualstudiogallery.msdn.microsoft.com/02f47876-0e7a-4f6c-93f8-1af5d5189225)などのいくつかのIDEはKarmaを統合し始めています。
 
@@ -2463,8 +2474,8 @@
     ```
     /src/client/app/customers/customer-detail.controller.js
                              /customer-detail.controller.spec.js
+                             /customers.controller.js
                              /customers.controller.spec.js
-                             /customers.controller-detail.spec.js
                              /customers.module.js
                              /customers.route.js
                              /customers.route.spec.js
@@ -2711,7 +2722,6 @@
         "disallowCommaBeforeLineBreak": null,
         "disallowDanglingUnderscores": null,
         "disallowEmptyBlocks": null,
-        "disallowMultipleLineStrings": null,
         "disallowTrailingComma": null,
         "requireCommaBeforeLineBreak": null,
         "requireDotNotation": null,
@@ -2840,13 +2850,15 @@
     ngdirective // creates an Angular directive
     ngfactory // creates an Angular factory
     ngmodule // creates an Angular module
+    ngservice // creates an Angular service
+    ngfilter // creates an Angular filter
     ```
 
 ### Brackets
 ###### [Style [Y254](#style-y254)]
 
   - 本スタイルとガイドラインに沿ったAngularのスニペット
-
+    - [Brackets Angular snippets](assets/brackets-angular-snippets.yaml?raw=true)をダウンロード
     - Brackets Extension マネージャー ( File > Extension manager )
     - ['Brackets Snippets (by edc)'](https://github.com/chuyik/brackets-snippets)をインストール
     - bracketsの右側にある電球をクリック
@@ -2870,14 +2882,33 @@
     ngstate      // creates an Angular UI Router state defintion
     ngconfig     // defines a configuration phase function
     ngrun        // defines a run phase function
+    ngroute      // defines an Angular ngRoute 'when' definition
+    ngtranslate  // uses $translate service with its promise
     ```
 
+### vim
+###### [Style [Y255](#style-y255)]
+
+  - 本スタイルやガイドラインに沿ったvimのスニペット
+
+    - [vim Angular snippets](assets/vim-angular-snippets?raw=true)をダウンロード
+    - [neosnippet.vim](https://github.com/Shougo/neosnippet.vim)をセット
+    - スニペットをsnippetディレクトリにコピー
+
+    ```javascript
+    ngcontroller // creates an Angular controller
+    ngdirective  // creates an Angular directive
+    ngfactory    // creates an Angular factory
+    ngmodule     // creates an Angular module
+    ngservice    // creates an Angular service
+    ngfilter     // creates an Angular filter
+    ```
 **[Back to top](#table-of-contents)**
 
 ## Yeoman Generator
 ###### [Style [Y260](#style-y260)]
 
-このスタイルガイドに沿ったAngularのアプリケーションを作る良いスタートポイントとして、[HotTowel yeoman generator](http://jpapa.me/yohottowel)を使うことができます。 
+このスタイルガイドに沿ったAngularのアプリケーションを作る良いスタートポイントとして、[HotTowel yeoman generator](http://jpapa.me/yohottowel)を使うことができます。
 
 1. generator-hottowelをインストール
 
@@ -2910,6 +2941,75 @@
     *なぜ ?*: UI RouterはAngularのルーターが持つ全ての機能プラス、ネスト化されたルーティングやステートなどいくつかの追加機能があります。
 
     *なぜ ?*: シンタックスはAngularのルータと非常に似ており、UI Routerへ容易に移行できます。
+  - Note: 以下に示されるように`routerHelperProvider`のようなプロバイダーを用いることができます。それはrunフェーズでファイルを跨ってstateを設定する際に役立ちます。
+
+    ```javascript
+    // customers.routes.js
+    angular
+        .module('app.customers')
+        .run(appRun);
+
+    /* @ngInject */
+    function appRun(routerHelper) {
+        routerHelper.configureStates(getStates());
+    }
+
+    function getStates() {
+        return [
+            {
+                state: 'customer',
+                config: {
+                    abstract: true,
+                    template: '<ui-view class="shuffle-animation"/>',
+                    url: '/customer'
+                }
+            }
+        ];
+    }
+    ```
+
+    ```javascript
+    // routerHelperProvider.js
+    angular
+        .module('blocks.router')
+        .provider('routerHelper', routerHelperProvider);
+
+    routerHelperProvider.$inject = ['$locationProvider', '$stateProvider', '$urlRouterProvider'];
+    /* @ngInject */
+    function routerHelperProvider($locationProvider, $stateProvider, $urlRouterProvider) {
+        /* jshint validthis:true */
+        this.$get = RouterHelper;
+
+        $locationProvider.html5Mode(true);
+
+        RouterHelper.$inject = ['$state'];
+        /* @ngInject */
+        function RouterHelper($state) {
+            var hasOtherwise = false;
+
+            var service = {
+                configureStates: configureStates,
+                getStates: getStates
+            };
+
+            return service;
+
+            ///////////////
+
+            function configureStates(states, otherwisePath) {
+                states.forEach(function(state) {
+                    $stateProvider.state(state.state, state.config);
+                });
+                if (otherwisePath && !hasOtherwise) {
+                    hasOtherwise = true;
+                    $urlRouterProvider.otherwise(otherwisePath);
+                }
+            }
+
+            function getStates() { return $state.get(); }
+        }
+    }
+    ```
 
 ###### [Style [Y271](#style-y271)]
 
@@ -2980,7 +3080,7 @@ _tldr; Use this guide. Attributions are appreciated._
 ### Copyright
 
 Copyright (c) 2014-2015 [John Papa](http://johnpapa.net)
- 
+
 ### (The MIT License)
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
